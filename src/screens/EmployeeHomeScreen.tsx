@@ -3,7 +3,6 @@ import React from 'react'
 
 const EmployeeHomeScreen = () => {
   return (
-    
     <View>
       <Text>EmployeeHomeScreen</Text>
     </View>

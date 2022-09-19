@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Text } from 'react-native-elements';
 
-const RegisterScreen = ({ navigation }) => {
+const RegisterScreen = ({ navigation } : any) => {
   // for inputs
   const [name, setName] = useState('');
   
