@@ -20,7 +20,6 @@ const LoginScreen = ({ navigation } : any) => {
     auth()
   .signOut()
   .then(() => console.log('User signed out!'));
-  
   return; 
   
     console.log('**************** login... ******************');
