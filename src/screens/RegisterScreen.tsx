@@ -10,6 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import { Text } from 'react-native-elements';
+import auth from '@react-native-firebase/auth';
 
 const RegisterScreen = ({ navigation } : any) => {
   // for inputs
@@ -27,6 +28,25 @@ const RegisterScreen = ({ navigation } : any) => {
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   const handleSignUp = async () => {
+    console.log('**************** Registering... ********************************');
+    auth()
+    .createUserWithEmailAndPassword('etest@gmail.com', '123456!')
+    .then(() => {
+      console.log('User account created & signed in!');
+    })
+    .catch(error => {
+      if (error.code === 'auth/email-already-in-use') {
+        console.log('That email address is already in use!');
+      }
+  
+      if (error.code === 'auth/invalid-email') {
+        console.log('That email address is invalid!');
+      }
+  
+      console.error(error);
+    });
+    return;
+
     // input verification
     if (!name || !surname || !email || !password) {
         Alert.alert('Please fill all the fields');

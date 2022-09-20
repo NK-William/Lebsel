@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "740198468641",
+    "firebase_url": "https://lebsel-default-rtdb.firebaseio.com",
+    "project_id": "lebsel",
+    "storage_bucket": "lebsel.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:740198468641:android:a9672818755f1b0f5ce760",
+        "android_client_info": {
+          "package_name": "com.lebsel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "740198468641-n6a1186rve5tcf3nje0qa2ffoamievms.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIg5AhNST2eBCL79EFTTqG1kQLGuvhZIU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "740198468641-n6a1186rve5tcf3nje0qa2ffoamievms.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

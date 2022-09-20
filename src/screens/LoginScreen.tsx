@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Text } from 'react-native-elements';
+import auth from '@react-native-firebase/auth';
 
 const LoginScreen = ({ navigation } : any) => {
   const [email, setEmail] = useState('');
@@ -15,6 +16,36 @@ const LoginScreen = ({ navigation } : any) => {
   // result
 
   const handleLogin = () => {
+
+    auth()
+  .signOut()
+  .then(() => console.log('User signed out!'));
+  return; 
+  
+    console.log('**************** login... ******************');
+    auth()
+    .signInWithEmailAndPassword('etest@gmail.com', '123456!')
+    .then(() => {
+      console.log('signed in!');
+    })
+    .catch(error => {
+  
+      if (error.code === 'auth/invalid-email') {
+        console.log('That email address is invalid!');
+      }
+  
+      if (error.code === 'auth/wrong-password') {
+        console.log('The password is invalid or the user does not have a password!');
+      }
+      
+      if (error.code === 'auth/user-not-found') {
+        console.log('There is no user record corresponding to this identifier. The user may have been deleted!');
+      }
+      console.error(error);
+    });
+    return;
+
+
     // perform some input validation before showing a loader
     setLoading(true); // only reach to this setter hook method only if all the input fields are valid
   };
