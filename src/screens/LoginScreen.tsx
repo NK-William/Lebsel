@@ -1,52 +1,60 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
-import { Text } from 'react-native-elements';
+import {Text} from 'react-native-elements';
 import auth from '@react-native-firebase/auth';
 
-const LoginScreen = ({ navigation } : any) => {
+const LoginScreen = ({navigation}: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   // result
 
-  const handleLogin = () => {
-  
-    console.log('**************** login... ******************');
-    auth()
-    .signInWithEmailAndPassword('etest@gmail.com', '123456!')
-    .then(() => {
-      console.log('signed in!');
-    })
-    .catch(error => {
-  
-      if (error.code === 'auth/invalid-email') {
-        console.log('That email address is invalid!');
-      }
-  
-      if (error.code === 'auth/wrong-password') {
-        console.log('The password is invalid or the user does not have a password!');
-      }
-      
-      if (error.code === 'auth/user-not-found') {
-        console.log('There is no user record corresponding to this identifier. The user may have been deleted!');
-      }
-      console.error(error);
-    });
-    return;
-
-
-    // perform some input validation before showing a loader
-    setLoading(true); // only reach to this setter hook method only if all the input fields are valid
+  const isValid = (): boolean => {
+    let valid: boolean = false;
+    if (!email || !password) {
+      Alert.alert('Please fill all the fields');
+    } else {
+      valid = true;
+    }
+    return valid;
   };
+
+  const handleLogin = () => {
+    if (!isValid()) return;
+    setLoading(true);
+    auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        setLoading(false);
+      })
+      .catch(error => {
+        if (error.code === 'auth/invalid-email') {
+          Alert.alert('That email address is invalid!');
+        } else if (error.code === 'auth/wrong-password') {
+          Alert.alert(
+            'The password is invalid or the user does not have a password!',
+          );
+        } else if (error.code === 'auth/user-not-found') {
+          Alert.alert(
+            'There is no user record corresponding to this identifier. The user may have been deleted!',
+          );
+        } else {
+          Alert.alert('Something went wrong! Please try again');
+        }
+        setLoading(false);
+      });
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.top_space}/>
+      <View style={styles.top_space} />
       <View style={styles.sub_container}>
         <Text style={styles.headerText} h1>
           Login
@@ -61,7 +69,7 @@ const LoginScreen = ({ navigation } : any) => {
           autoCapitalize="none"
           autoCorrect={false}
           value={email}
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={text => setEmail(text)}
         />
         <Text style={styles.passwordText}>PASSWORD</Text>
         <TextInput
@@ -71,7 +79,7 @@ const LoginScreen = ({ navigation } : any) => {
           autoCorrect={false}
           secureTextEntry
           value={password}
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={text => setPassword(text)}
         />
 
         {loading ? (
@@ -86,16 +94,14 @@ const LoginScreen = ({ navigation } : any) => {
             style={styles.submitButton}
             onPress={() => {
               handleLogin();
-            }}
-          >
+            }}>
             <Text style={styles.SubmitButtonText}>SUBMIT</Text>
           </TouchableOpacity>
         )}
         <TouchableOpacity
           onPress={() => {
             console.log('reset password pressed');
-          }}
-        >
+          }}>
           <Text style={styles.linkText}>Forgot password?</Text>
         </TouchableOpacity>
       </View>
@@ -104,9 +110,8 @@ const LoginScreen = ({ navigation } : any) => {
           <Text style={styles.text}>Don't have an account? </Text>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Register");
-            }}
-          >
+              navigation.navigate('Register');
+            }}>
             <Text style={styles.linkText}>Sign up</Text>
           </TouchableOpacity>
         </View>
@@ -118,9 +123,9 @@ const LoginScreen = ({ navigation } : any) => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
-  headerText: { color: 'white' },
-  text: { color: '#615E67', marginTop: 16, fontSize: 15 },
-  activityIndicator: { alignSelf: 'center', marginTop: 25 },
+  headerText: {color: 'white'},
+  text: {color: '#615E67', marginTop: 16, fontSize: 15},
+  activityIndicator: {alignSelf: 'center', marginTop: 25},
   linkText: {
     color: '#0DF6E3',
     marginTop: 16,
@@ -164,7 +169,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#201C31',
   },
-  safeAreaContainer: { flex: 1 },
+  safeAreaContainer: {flex: 1},
   container: {
     flex: 1,
     padding: 24,
