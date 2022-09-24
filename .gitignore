@@ -61,3 +61,6 @@ buck-out/
 # Ruby / CocoaPods
 /ios/Pods/
 /vendor/bundle/
+
+# src files
+src/resources/Constants/sensitiveDataConstants.ts

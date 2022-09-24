@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, Children} from 'react';
 import {
   StyleSheet,
   View,
@@ -9,14 +9,14 @@ import {
   Switch,
   Alert,
 } from 'react-native';
-import { Text } from 'react-native-elements';
-import auth from '@react-native-firebase/auth';
+import {Text} from 'react-native-elements';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import database from '@react-native-firebase/database';
 
-const RegisterScreen = ({ navigation } : any) => {
+const RegisterScreen = ({navigation}: any) => {
   // for inputs
   const [name, setName] = useState('');
-  
-  const [surname, setSurname] = useState('');
+  const [surname, setSurname] = useState<string>('');
   const [code, setCode] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,53 +25,83 @@ const RegisterScreen = ({ navigation } : any) => {
   const [loading, setLoading] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
 
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+  const isValid = (): boolean => {
+    let valid: boolean = false;
+    if (!name || !surname || !email || !password) {
+      Alert.alert('Please fill all the fields');
+    } else if (!isEnabled && !code) {
+      Alert.alert('Please enter the code');
+    } else if (!passwordVerification) {
+      Alert.alert('Please re-enter the password');
+    } else if (password !== passwordVerification) {
+      Alert.alert("Your entered passwords don't match");
+    } else {
+      valid = true;
+    }
+    return valid;
+  };
 
   const handleSignUp = async () => {
-    console.log('**************** Registering... ********************************');
+    if (!isValid()) return;
+    setLoading(true);
     auth()
-    .createUserWithEmailAndPassword('etest@gmail.com', '123456!')
-    .then(() => {
-      console.log('User account created & signed in!');
-    })
-    .catch(error => {
-      if (error.code === 'auth/email-already-in-use') {
-        console.log('That email address is already in use!');
-      }
-  
-      if (error.code === 'auth/invalid-email') {
-        console.log('That email address is invalid!');
-      }
-  
-      console.error(error);
-    });
-    return;
+      .createUserWithEmailAndPassword(email, password)
+      .then(async userCredentials => {
+        Alert.alert('User account created & signed in!');
+        await addUserToDatabase(userCredentials);
+        setLoading(false);
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          Alert.alert('That email address is already in use!');
+        } else if (error.code === 'auth/invalid-email') {
+          Alert.alert('That email address is invalid!');
+        } else if (error.code === 'auth/weak-password') {
+          Alert.alert('Your password has to be at least 6 characters');
+        } else {
+          Alert.alert('Something went wrong! Please try again');
+        }
+        setLoading(false);
+      });
 
-    // input verification
-    if (!name || !surname || !email || !password) {
-        Alert.alert('Please fill all the fields');
-    } else if (!isEnabled && !code) {
-        Alert.alert('Please enter the code');
-    } else if (!passwordVerification) {
-        Alert.alert('Please re-enter the password');
-    } else if (password !== passwordVerification) {
-        Alert.alert("Your entered passwords don't match");
-    } else {
-      //setLoading(true); // only reach to this setter hook method only if all the input fields are valid
-    
     // auth
     //   .createUserWithEmailAndPassword(email, password)
     //   .then((userCredentials) => {
     //     const user = userCredentials.user;
-    //     console.log("Registered with:", user.email);
     // setLoading(false);
     //   })
     //   .catch((error) => {
-        // Alert.aler(error.message)
-        // setLoading(false);
-    // });
-}
+    // Alert.aler(error.message)
+    // setLoading(false);
+    //  });
   };
+
+  const addUserToDatabase = async (
+    UserCredential: FirebaseAuthTypes.UserCredential,
+  ) => {
+    let userRoleCategory = isEnabled ? 'admins' : 'employees';
+    let finalCode: string;
+    if (isEnabled) finalCode = Math.floor(Math.random() * 100 + 1).toString();
+    else finalCode = code;
+
+    database()
+      .ref(`/users/${userRoleCategory}/`)
+      // .child(`users/${userRoleCategory}/`)
+      .child(UserCredential.user.uid)
+      .set({
+        name,
+        surname,
+        email,
+        Code: finalCode,
+      })
+      .then()
+      .catch(error => {
+        Alert.alert('"Something went wrong! Please try again"');
+      });
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -86,7 +116,7 @@ const RegisterScreen = ({ navigation } : any) => {
           autoCapitalize="none"
           autoCorrect={false}
           value={name}
-          onChangeText={(text) => setName(text)}
+          onChangeText={text => setName(text)}
         />
         <Text style={styles.hintText}>SURNAME</Text>
         <TextInput
@@ -95,23 +125,22 @@ const RegisterScreen = ({ navigation } : any) => {
           autoCapitalize="none"
           autoCorrect={false}
           value={surname}
-          onChangeText={(text) => setSurname(text)}
+          onChangeText={text => setSurname(text)}
         />
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
             padding: 4,
-          }}
-        >
-          <Text style={{ flex: 1, color: 'white', marginLeft: 12 }}>
+          }}>
+          <Text style={{flex: 1, color: 'white', marginLeft: 12}}>
             Are you an admin?
           </Text>
-          <Text style={{ color: '#0DF6E3', marginLeft: 12 }}>
+          <Text style={{color: '#0DF6E3', marginLeft: 12}}>
             {isEnabled ? 'Yes' : 'No'}
           </Text>
           <Switch
-            trackColor={{ false: '#767577', true: '#0DF6E3' }}
+            trackColor={{false: '#767577', true: '#0DF6E3'}}
             thumbColor={isEnabled ? 'white' : 'white'}
             ios_backgroundColor="#3e3e3e"
             onValueChange={toggleSwitch}
@@ -119,7 +148,7 @@ const RegisterScreen = ({ navigation } : any) => {
           />
         </View>
         {isEnabled ? (
-          <Text style={{ color: '#0DF6E3', marginHorizontal: 8 }}>
+          <Text style={{color: '#0DF6E3', marginHorizontal: 8}}>
             A code will be generated when you register, provide the code to your
             employees when they register to the system, you can re-view the code
             from the settings.
@@ -133,7 +162,7 @@ const RegisterScreen = ({ navigation } : any) => {
               autoCapitalize="none"
               autoCorrect={false}
               value={code}
-              onChangeText={(text) => setCode(text)}
+              onChangeText={text => setCode(text)}
             />
           </>
         )}
@@ -145,7 +174,7 @@ const RegisterScreen = ({ navigation } : any) => {
           autoCapitalize="none"
           autoCorrect={false}
           value={email}
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={text => setEmail(text)}
         />
         <Text style={styles.hintText}>PASSWORD</Text>
         <TextInput
@@ -155,7 +184,7 @@ const RegisterScreen = ({ navigation } : any) => {
           autoCorrect={false}
           secureTextEntry
           value={password}
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={text => setPassword(text)}
         />
         <Text style={styles.hintText}>RE-ENTER PASSWORD</Text>
         <TextInput
@@ -165,11 +194,11 @@ const RegisterScreen = ({ navigation } : any) => {
           autoCorrect={false}
           secureTextEntry
           value={passwordVerification}
-          onChangeText={(text) => setPasswordVerification(text)}
+          onChangeText={text => setPasswordVerification(text)}
         />
         {loading ? (
           <ActivityIndicator
-            style={{ alignSelf: 'center', marginTop: 25 }}
+            style={{alignSelf: 'center', marginTop: 25}}
             size="large"
             color="#0DF6E3"
             animating={true}
@@ -179,8 +208,7 @@ const RegisterScreen = ({ navigation } : any) => {
             style={styles.submitButton}
             onPress={() => {
               handleSignUp();
-            }}
-          >
+            }}>
             <Text style={styles.SubmitButtonText}>SUBMIT</Text>
           </TouchableOpacity>
         )}
@@ -190,8 +218,7 @@ const RegisterScreen = ({ navigation } : any) => {
             <TouchableOpacity
               onPress={() => {
                 navigation.pop();
-              }}
-            >
+              }}>
               <Text style={styles.linkText}>Sign in</Text>
             </TouchableOpacity>
           </View>
@@ -214,8 +241,8 @@ const styles = StyleSheet.create({
   scrollView: {
     paddingRight: 12,
   },
-  headerText: { color: 'white' },
-  text: { color: '#615E67', marginTop: 16, fontSize: 15 },
+  headerText: {color: 'white'},
+  text: {color: '#615E67', marginTop: 16, fontSize: 15},
   topHintText: {
     marginTop: 50,
     marginLeft: 8,
