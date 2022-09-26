@@ -10,7 +10,7 @@ import TimeSheetsScreen from '../screens/TimeSheetsScreen';
 import UniformRecordsScreen from '../screens/UniformRecordsScreen';
 import PromotersScreen from '../screens/PromotersScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Ionicons} from '@expo/vector-icons';
+import Ionicons from 'react-native-vector-icons';
 import {PrimaryColor} from '../resources/colors';
 
 const Tab = createBottomTabNavigator();
