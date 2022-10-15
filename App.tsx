@@ -6,6 +6,7 @@ import {
   // SafeAreaView,
   // StatusBar,
 } from 'react-native';
+import MainFlowNavigation from "./src/navigation/MainFlowNavigation";
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import EmployeeHomeScreen from './src/screens/EmployeeHomeScreen';
 
@@ -22,7 +23,13 @@ useEffect(() => {
     // <SafeAreaView>
     //   <StatusBar/>
     <NavigationContainer>
-      { user ? <EmployeeHomeScreen/> : <AuthenticationFlowNavigation />}
+      {user ? (
+        // <PromoterProvider>
+          <MainFlowNavigation user={user} />
+        // </PromoterProvider>
+      ) : (
+        <AuthenticationFlowNavigation />
+      )}
     </NavigationContainer>
     // </SafeAreaView>
   );
