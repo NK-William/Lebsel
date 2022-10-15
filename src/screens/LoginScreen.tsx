@@ -102,7 +102,7 @@ const LoginScreen = ({navigation}: any) => {
           onPress={() => {
             console.log('reset password pressed');
           }}>
-          <Text style={styles.linkText}>Forgot password?</Text>
+          <Text style={styles.linkText}>Reset password</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.bottom_container}>
