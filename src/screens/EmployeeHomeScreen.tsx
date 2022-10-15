@@ -11,7 +11,7 @@ const EmployeeHomeScreen = () => {
             .signOut()
             .then(() => console.log('User signed out!'))
         }>
-        <Text>sign out from employee</Text>
+        <Text style={{color: "black"}}>sign out from employee</Text>
       </Pressable>
     </View>
   );
