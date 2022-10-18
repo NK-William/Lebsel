@@ -3,7 +3,7 @@ import React from 'react';
 
 const EmployeeTimesheetsScreen = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <Text>EmployeeTimesheetsScreen</Text>
     </View>
   );
@@ -11,4 +11,4 @@ const EmployeeTimesheetsScreen = () => {
 
 export default EmployeeTimesheetsScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({ container: { flex: 1 } });
