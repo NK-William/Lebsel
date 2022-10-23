@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
-import { LinearGradient } from "react-native-linear-gradient";
+import LinearGradient from "react-native-linear-gradient";
 import { PrimaryColor, AccentColor } from "../resources/colors";
 import Icon  from "react-native-vector-icons/Ionicons";
 
