@@ -1,28 +1,27 @@
-import {StyleSheet, Text, View, Button, Image} from 'react-native';
+import {StyleSheet, TouchableOpacity, Text, View, Button, Image} from 'react-native';
 import React, { useState } from 'react';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 const EmployeeProfileScreen = () => {
-  const [image, setImage] = useState<any | undefined>();
+  const [imagePath, setImagePath] = useState<any | undefined>();
 
-  const btnClicked = async () => {
-    console.log("Pressed")
-     const result = await launchCamera({mediaType: 'photo'});
+  const btnClicked = () => {
+     launchCamera({quality:0.7, mediaType: 'photo', }, response => {
     //const result = await launchImageLibrary({mediaType: 'photo'});
-    let imageObject : any = result.assets[0];
-    console.log(imageObject)
-    console.log("uri *****", imageObject.uri)
-    setImage(result);
+    let imagePathResult : any = response.assets[0].uri;
+    setImagePath(imagePathResult);
+     })
   }
 
   return (
     <View style={{flex: 1}}>
       <Button title="Click" onPress={() => btnClicked()}/>
       <Image
-          source={
-            image ? { uri: image.uri } : require("../resources/images/profilepicplaceholder.png")
-          }
-        />
+        style={styles.image}
+        source={
+          imagePath ? { uri: imagePath } : require("../resources/images/profilepicplaceholder.png")
+        }
+      />
     </View>
     
   );
@@ -31,5 +30,9 @@ const EmployeeProfileScreen = () => {
 export default EmployeeProfileScreen;
 
 const styles = StyleSheet.create({
+  image: {
+    width: "100%",
+    height: "100%"
+  }
 }); 
 
