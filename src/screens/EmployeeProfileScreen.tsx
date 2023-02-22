@@ -21,6 +21,11 @@ const EmployeeProfileScreen = () => {
 
   const pickImage = async () => {
     setPhotoPopUpVisible(false);
+    launchImageLibrary({quality: 0.7, mediaType: 'photo'}, response => {
+      //const result = await launchImageLibrary({mediaType: 'photo'});
+      let imagePathResult: any = response.assets[0].uri;
+      setImagePath(imagePathResult);
+    });
   };
 
   const captureImage = () => {
