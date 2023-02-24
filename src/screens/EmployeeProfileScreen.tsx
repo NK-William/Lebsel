@@ -13,6 +13,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {LighterPrimaryColor, PrimaryColor} from '../resources/colors';
 import ImagePickerOrTakePhotoPopUp from '../components/ImagePickerOrTakePhotoPopUp';
+import Toast from 'react-native-simple-toast';
 
 const EmployeeProfileScreen = () => {
   const [isEdit, setIsEdit] = useState(false);
@@ -23,8 +24,25 @@ const EmployeeProfileScreen = () => {
     setPhotoPopUpVisible(false);
     launchImageLibrary({quality: 0.7, mediaType: 'photo'}, response => {
       //const result = await launchImageLibrary({mediaType: 'photo'});
+
+      if (response.didCancel) {
+        Toast.show('Cancelled image upload', Toast.LONG);
+        return;
+      }
+
+      if (response.errorMessage) {
+        Toast.show(response.errorMessage, Toast.LONG);
+        return;
+      }
+
+      if (response.errorCode == 'permission') {
+        Toast.show('Camera permission not granted', Toast.LONG);
+        return;
+      }
+
       let imagePathResult: any = response.assets[0].uri;
-      setImagePath(imagePathResult);
+      if (imagePathResult) setImagePath(imagePathResult);
+      else Toast.show('Something went wrong', Toast.LONG);
     });
   };
 
@@ -32,8 +50,30 @@ const EmployeeProfileScreen = () => {
     setPhotoPopUpVisible(false);
     launchCamera({quality: 0.7, mediaType: 'photo'}, response => {
       //const result = await launchImageLibrary({mediaType: 'photo'});
+
+      if (response.didCancel) {
+        Toast.show('Cancelled image upload', Toast.LONG);
+        return;
+      }
+
+      if (response.errorMessage) {
+        Toast.show(response.errorMessage, Toast.LONG);
+        return;
+      }
+
+      if (response.errorCode == 'camera_unavailable') {
+        Toast.show('Camera is not available on this device', Toast.LONG);
+        return;
+      }
+
+      if (response.errorCode == 'permission') {
+        Toast.show('Camera permission not granted', Toast.LONG);
+        return;
+      }
+
       let imagePathResult: any = response.assets[0].uri;
-      setImagePath(imagePathResult);
+      if (imagePathResult) setImagePath(imagePathResult);
+      else Toast.show('Something went wrong', Toast.LONG);
     });
   };
 
