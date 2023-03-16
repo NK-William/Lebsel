@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
-import { PrimaryColor } from "../resources/colors";
-import DayBubble from "../components/DayBubble";
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {PrimaryColor} from '../resources/colors';
+import DayBubble from '../components/DayBubble';
 
 const EmployeeAvailabilityScreen = () => {
   const [radioButtons, setRadioButtons] = useState({
@@ -15,26 +15,26 @@ const EmployeeAvailabilityScreen = () => {
   });
 
   const mondayRadioBtnName = radioButtons.mondayWeekly
-    ? "radio-button-on"
-    : "radio-button-off";
+    ? 'radio-button-on'
+    : 'radio-button-off';
   const tuesdayRadioBtnName = radioButtons.tuesdayWeekly
-    ? "radio-button-on"
-    : "radio-button-off";
+    ? 'radio-button-on'
+    : 'radio-button-off';
   const wednesdayRadioBtnName = radioButtons.wednesdayWeekly
-    ? "radio-button-on"
-    : "radio-button-off";
+    ? 'radio-button-on'
+    : 'radio-button-off';
   const thursdayRadioBtnName = radioButtons.thursdayWeekly
-    ? "radio-button-on"
-    : "radio-button-off";
+    ? 'radio-button-on'
+    : 'radio-button-off';
   const fridayRadioBtnName = radioButtons.fridayWeekly
-    ? "radio-button-on"
-    : "radio-button-off";
+    ? 'radio-button-on'
+    : 'radio-button-off';
   const saturdayRadioBtnName = radioButtons.saturdayWeekly
-    ? "radio-button-on"
-    : "radio-button-off";
+    ? 'radio-button-on'
+    : 'radio-button-off';
   const sundayRadioBtnName = radioButtons.sundayWeekly
-    ? "radio-button-on"
-    : "radio-button-off";
+    ? 'radio-button-on'
+    : 'radio-button-off';
 
   return (
     <View style={styles.container}>
@@ -137,24 +137,24 @@ export default EmployeeAvailabilityScreen;
 
 const styles = StyleSheet.create({
   titleText: {
-    alignSelf: "center",
+    alignSelf: 'center',
     color: PrimaryColor,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     margin: 8,
     fontSize: 16,
   },
-  space: { marginHorizontal: 8 },
-  container: { flex: 1 },
+  space: {marginHorizontal: 8},
+  container: {flex: 1, backgroundColor: 'white'},
   gridRowView: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginVertical: 8,
   },
   radioButton: {},
   gridView: {
     marginHorizontal: 8,
     marginBottom: 18,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     flex: 1,
   },
 });
